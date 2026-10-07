@@ -1,0 +1,33 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "client": {
+      "root": "MUYAR_PRACTICAL/client",
+      "framework": "vite"
+    },
+    "server": {
+      "root": "MUYAR_PRACTICAL/client/server",
+      "framework": "express"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/students/(.*)",
+      "destination": {
+        "service": "server"
+      }
+    },
+    {
+      "source": "/students",
+      "destination": {
+        "service": "server"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "client"
+      }
+    }
+  ]
+}
