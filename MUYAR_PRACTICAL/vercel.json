@@ -1,33 +1,30 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "services": {
-    "client": {
-      "root": "MUYAR_PRACTICAL/client",
-      "framework": "vite"
+  "version": 2,
+  "builds": [
+    {
+      "src": "MUYAR_PRACTICAL/client/server/server.js",
+      "use": "@vercel/node"
     },
-    "server": {
-      "root": "MUYAR_PRACTICAL/client/server",
-      "framework": "express"
+    {
+      "src": "MUYAR_PRACTICAL/client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
-  },
-  "rewrites": [
+  ],
+  "routes": [
     {
       "source": "/students/(.*)",
-      "destination": {
-        "service": "server"
-      }
+      "destination": "/MUYAR_PRACTICAL/client/server/server.js"
     },
     {
       "source": "/students",
-      "destination": {
-        "service": "server"
-      }
+      "destination": "/MUYAR_PRACTICAL/client/server/server.js"
     },
     {
       "source": "/(.*)",
-      "destination": {
-        "service": "client"
-      }
+      "destination": "/MUYAR_PRACTICAL/client/$1"
     }
   ]
 }
