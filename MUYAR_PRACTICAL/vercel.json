@@ -2,11 +2,11 @@
   "version": 2,
   "builds": [
     {
-      "src": "MUYAR_PRACTICAL/client/server/server.js",
+      "src": "server/server.js",
       "use": "@vercel/node"
     },
     {
-      "src": "MUYAR_PRACTICAL/client/package.json",
+      "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
         "distDir": "dist"
@@ -15,16 +15,16 @@
   ],
   "routes": [
     {
-      "source": "/students/(.*)",
-      "destination": "/MUYAR_PRACTICAL/client/server/server.js"
+      "src": "/students/(.*)",
+      "dest": "server/server.js"
     },
     {
-      "source": "/students",
-      "destination": "/MUYAR_PRACTICAL/client/server/server.js"
+      "src": "/students",
+      "dest": "server/server.js"
     },
     {
-      "source": "/(.*)",
-      "destination": "/MUYAR_PRACTICAL/client/$1"
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ]
 }
