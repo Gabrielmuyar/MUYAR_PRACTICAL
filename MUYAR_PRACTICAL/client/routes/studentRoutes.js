@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
     try {
-        const studyante = await Studyante.create(req,body);
+        const studyante = await Studyante.create(req.body);
         res.status(201).json(studyante);
     } catch (error) {
         res.status(400).json({ message: error.message});
