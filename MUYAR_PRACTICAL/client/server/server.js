@@ -7,25 +7,25 @@ require("dotenv").config();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 app.use(express.json());
 
 // MongoDB Connection
 mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch((error) => {
-    console.log("MongoDB connection error:", error);
-  });
+  .connect(process.env.MONGO_URI || "mongodb+srv://gabrielmuyar_db_user:rii63VOMjJQSMWrJ@cluster0.8s0oabv.mongodb.net/?appName=Cluster0")
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((error) => console.log("MongoDB connection error:", error));
 
-// Root Route
+// Root route
 app.get("/", (req, res) => {
   res.send("Server is Running!");
 });
 
-// READ ALL: GET /students
+// GET /students - Read all students
 app.get("/students", async (req, res) => {
   try {
     const students = await Student.find();
@@ -35,7 +35,7 @@ app.get("/students", async (req, res) => {
   }
 });
 
-// CREATE: POST /students
+// POST /students - Create a student
 app.post("/students", async (req, res) => {
   try {
     const { name, course, age } = req.body;
@@ -47,7 +47,7 @@ app.post("/students", async (req, res) => {
   }
 });
 
-// UPDATE: PUT /students/:id
+// PUT /students/:id - Update a student
 app.put("/students/:id", async (req, res) => {
   try {
     const { name, course, age } = req.body;
@@ -65,7 +65,7 @@ app.put("/students/:id", async (req, res) => {
   }
 });
 
-// DELETE: DELETE /students/:id
+// DELETE /students/:id - Delete a student
 app.delete("/students/:id", async (req, res) => {
   try {
     const deletedStudent = await Student.findByIdAndDelete(req.params.id);
@@ -78,7 +78,8 @@ app.delete("/students/:id", async (req, res) => {
   }
 });
 
-// Start Server
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
-});
+module.exports = app;
+
+if (process.env.NODE_ENV !== "production") {
+  app.listen(5000, () => console.log("Server running on port 5000"));
+}
