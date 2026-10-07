@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+
 function App() {
   const [students, setStudents] = useState([]);
   const [name, setName] = useState("");
@@ -8,23 +10,17 @@ function App() {
   const [age, setAge] = useState("");
   const [editingId, setEditingId] = useState(null);
 
-  // Helper to fetch all student records from backend
   const fetchStudents = () => {
     axios
-      .get("http://localhost:5000/students")
-      .then((response) => {
-        setStudents(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching students:", error);
-      });
+      .get(`${API_URL}/students`)
+      .then((response) => setStudents(response.data))
+      .catch((error) => console.error("Error fetching students:", error));
   };
 
   useEffect(() => {
     fetchStudents();
   }, []);
 
-  // Handle Form Submit (CREATE or UPDATE)
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!name || !course || !age) {
@@ -33,9 +29,8 @@ function App() {
     }
 
     if (editingId) {
-      // UPDATE Operation
       axios
-        .put(`http://localhost:5000/students/${editingId}`, {
+        .put(`${API_URL}/students/${editingId}`, {
           name,
           course,
           age: Number(age),
@@ -46,9 +41,8 @@ function App() {
         })
         .catch((error) => console.error("Error updating student:", error));
     } else {
-      // CREATE Operation
       axios
-        .post("http://localhost:5000/students", {
+        .post(`${API_URL}/students`, {
           name,
           course,
           age: Number(age),
@@ -61,7 +55,6 @@ function App() {
     }
   };
 
-  // Populate form for Editing
   const handleEdit = (student) => {
     setEditingId(student._id);
     setName(student.name);
@@ -69,17 +62,13 @@ function App() {
     setAge(student.age);
   };
 
-  // DELETE Operation
   const handleDelete = (id) => {
     axios
-      .delete(`http://localhost:5000/students/${id}`)
-      .then(() => {
-        fetchStudents();
-      })
+      .delete(`${API_URL}/students/${id}`)
+      .then(() => fetchStudents())
       .catch((error) => console.error("Error deleting student:", error));
   };
 
-  // Reset form inputs
   const resetForm = () => {
     setName("");
     setCourse("");
@@ -91,7 +80,6 @@ function App() {
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
       <h1>Student Management System</h1>
 
-      {/* Form Section */}
       <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
         <h3>{editingId ? "Edit Student" : "Add Student"}</h3>
         <div>
@@ -140,7 +128,6 @@ function App() {
 
       <hr />
 
-      {/* Student List Section */}
       <h2>Students List</h2>
       {students.length === 0 ? (
         <p>No students found.</p>
